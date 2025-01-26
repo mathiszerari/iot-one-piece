@@ -15,28 +15,25 @@ You need to connect a XBee coordinator to this central and launch the service.
 # Getting Started
 
 1. Copy .env.dist to .env file and edit with local parameters
-2. make install
-3. make run
+
+        cp .env.dist .env
+
+2. Install requirements
+
+       make install
+
+3. Launch application
+
+       make run
 
 ## Requirements
 * Configure a coordinator and router/enddevice with XCTU ([Download XCTU](https://www.digi.com/products/embedded-systems/digi-xbee/digi-xbee-tools/xctu#productsupport-utilities))
-* Ensure to set API mode to same one in the code
+* Ensure to set API mode to same one in the code (default: 2)
 * Ensure your user is member of the `dialout` group on Linux (use the `id` command) and add user to group if not already done
 
-    $sudo usermod -a -G dialout yourUserName
+      sudo usermod -a -G dialout <YOUR_USERNAME>
 
-* Connect the coordinator to your computer and launch server.js with `yarn start`
+* Install command make 
+      
+      apt install make
 
-
-#### Disclaimer !
-Il est impossible pour le container docker possédant node.js d'accéder aux ports COM.
-Pour résoudre ce probleme :
-1) Installez  node.js sur votre machine (si ce n'est pas déjà fait).
-   liens : https://nodejs.org/en/
-2) Ouvrez un terminal (Powershell ou CMD) en mode administateur.
-3) Accédez à votre dossier.
-4) lancez les commandes suivantes :
-   ```
-   npm install
-   npm start
-    ```
