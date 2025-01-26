@@ -1,12 +1,12 @@
 var SerialPort = require('serialport');
 var xbee_api = require('xbee-api');
 var C = xbee_api.constants;
-//var storage = require("./storage")
 require('dotenv').config()
 
 
 const SERIAL_PORT = process.env.SERIAL_PORT;
 
+// Ensure to configure your XBEE Module in API MODE 2
 var xbeeAPI = new xbee_api.XBeeAPI({
   api_mode: 2
 });
