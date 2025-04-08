@@ -50,7 +50,7 @@ serialport.on("open", function () {
   };
   xbeeAPI.builder.write(frame_obj);
 
-
+ //set D0 à 04 pour allumer une led , mettre 04 à 00 pour l'eteindre
   var setLum = {
     type: C.FRAME_TYPE.AT_COMMAND,
     command: "D0",
