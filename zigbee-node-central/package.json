@@ -8,6 +8,7 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "firebase-admin": "^9.5.0",
+    "mqtt": "^5.10.4",
     "serialport": "^9.2.4",
     "socket.io": "^2.4.0",
     "xbee": "^0.0.4",

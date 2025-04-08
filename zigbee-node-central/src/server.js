@@ -1,6 +1,7 @@
 var SerialPort = require('serialport');
 var xbee_api = require('xbee-api');
 var C = xbee_api.constants;
+const mqtt = require('mqtt');
 require('dotenv').config()
 
 if (!process.env.SERIAL_PORT)
@@ -49,7 +50,18 @@ serialport.on("open", function () {
   };
   xbeeAPI.builder.write(frame_obj);
 
+
+  var setLum = {
+    type: C.FRAME_TYPE.AT_COMMAND,
+    command: "D0",
+    commandParameter: [0x04],
+  };
+
+  xbeeAPI.builder.write(setLum);
 });
+
+const client = mqtt.connect('mqtt://test.mosquitto.org');
+client.publish('game/player1', 'salut mathis')
 
 // All frames parsed by the XBee will be emitted here
 xbeeAPI.parser.on("data", function (frame) {
