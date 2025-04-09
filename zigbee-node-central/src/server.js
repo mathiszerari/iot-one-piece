@@ -1,7 +1,12 @@
-var SerialPort = require('serialport');
-var xbee_api = require('xbee-api');
-var C = xbee_api.constants;
-require('dotenv').config()
+import SerialPort from 'serialport';
+import xbee_api from 'xbee-api';
+import mqtt from 'mqtt';
+import {sendToTopic, subscribeToTopic} from './mqtt-client.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const C = xbee_api.constants;
 
 if (!process.env.SERIAL_PORT)
   throw new Error('Missing SERIAL_PORT environment variable');
@@ -72,11 +77,11 @@ xbeeAPI.parser.on("data", function (frame) {
     console.log("NODE_IDENTIFICATION");
 
   } else if (C.FRAME_TYPE.ZIGBEE_IO_DATA_SAMPLE_RX === frame.type) {
+    console.log("ZIGBEE_IO_DATA_SAMPLE_RX");
+    console.log(frame);
+    console.log(frame.analogSamples.AD0);
 
-    console.log("ZIGBEE_IO_DATA_SAMPLE_RX")
-    console.log(frame)
-    console.log("Value of ADO can be retrieved with frame.analogSamples.AD0")
-    console.log(frame.analogSamples.AD0)
+    sendToTopic('box/lightlevel', String(frame.analogSamples.AD0));
 
   } else if (C.FRAME_TYPE.REMOTE_COMMAND_RESPONSE === frame.type) {
     console.log("REMOTE_COMMAND_RESPONSE")
@@ -84,6 +89,6 @@ xbeeAPI.parser.on("data", function (frame) {
     console.debug(frame);
     let dataReceived = String.fromCharCode.apply(null, frame.commandData)
     console.log(dataReceived);
+    subscribeToTopic('game/player1');
   }
-
 });
