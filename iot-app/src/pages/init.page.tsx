@@ -11,7 +11,7 @@ const OnePiecePage: React.FC = () => {
         navigate('/step', { 
             state: { 
                 image: EmojiType.sunny, 
-                number: 1,
+                step: 1,
                 indice: "Revenez chercher le trésor la nuit 🌙",
                 sensor: SensorType.LIGHT
             } 

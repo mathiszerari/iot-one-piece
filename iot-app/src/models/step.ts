@@ -2,7 +2,7 @@ import { SensorType } from "./sensors.enum";
 
 export interface StepData {
   image: string;
-  number: number;
+  step: number;
   indice: string;
   sensor: SensorType;
 }

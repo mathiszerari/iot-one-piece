@@ -10,11 +10,11 @@ const StepPage: React.FC = () => {
 
     return (
         <div className="bg-gray-950 text-white min-h-screen justify-start">
-            <ProgressBar currentStep={state.number} totalSteps={10} />
+            <ProgressBar currentStep={state.step} totalSteps={10} />
             <div className="mt-8 w-full max-w-md">
                 <Step
-                    imageSrc={state.image}
-                    text={`Étape ${state.number}`}
+                    image={state.image}
+                    step={state.step}
                     indice={state.indice}
                     sensor={state.sensor}
                 />
