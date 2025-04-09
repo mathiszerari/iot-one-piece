@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
-import { subscribeToTopic, sendToTopic } from "../utils/mqttFunctions";
+import { sendToTopic } from "../utils/mqttFunctions";
 import { useNavigate } from "react-router-dom";
 import { SensorType } from "../models/sensors.enum";
 import { EmojiType } from "../models/emojis.enum";
+import { subscribeLightLevel } from "../services/light.service";
 
 const OnePiecePage: React.FC = () => {
     const navigate = useNavigate();
@@ -11,7 +12,7 @@ const OnePiecePage: React.FC = () => {
     const [message, setMessage] = useState<string>("");
 
     useEffect(() => {
-        subscribeToTopic("box/lightlevel", setMessage);
+        subscribeLightLevel(setMessage);
     }, []);
 
     useEffect(() => {
