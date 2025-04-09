@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "../App.css";
-import { sendToTopic } from "../utils/mqttFunctions";
 import { useNavigate } from "react-router-dom";
 import { SensorType } from "../models/sensors.enum";
 import { EmojiType } from "../models/emojis.enum";
-import { subscribeLightLevel } from "../services/light.service";
 
 const OnePiecePage: React.FC = () => {
     const navigate = useNavigate();

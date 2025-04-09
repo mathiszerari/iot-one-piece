@@ -28,12 +28,11 @@ const Step: React.FC<StepProps> = ({ imageSrc, text, indice, sensor }) => {
 
     return (
         <div className="flex flex-col items-center">
-            <img src={imageSrc} alt="Step" className="w-64 h-64 object-cover rounded-lg shadow-lg" />
-            <h2 className="mt-4 text-2xl font-bold">{text}</h2>
-            <p className="mt-2 text-gray-400">{indice}</p>
+            <h2 className="my-6 text-2xl font-bold">{text}</h2>
+            <p className="my-4 text-lg text-gray-300">Indice : {indice}</p>
+            <img src={imageSrc} alt="Step" className="my-4 w-1/3 h-1/3 object-cover rounded-lg shadow-lg" />
             {sensor === SensorType.LIGHT && (
                 <div className="mt-8 text-center">
-                    <h2 className="text-3xl">Lumière :</h2>
                     <p className="text-xl">{message || "Erreur "}</p>
                 </div>
             )}

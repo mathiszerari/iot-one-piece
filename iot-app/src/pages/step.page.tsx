@@ -1,7 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import ProgressBar from "../components/progressbar.component";
-import "../App.css";
 import Step from "../components/step.component";
 import { StepData } from "../models/step";
 
