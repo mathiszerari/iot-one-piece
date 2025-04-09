@@ -1,25 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "../App.css";
-import { subscribeToTopic, sendToTopic } from "../utils/mqttFunctions";
 import { useNavigate } from "react-router-dom";
 import { SensorType } from "../models/sensors.enum";
 import { EmojiType } from "../models/emojis.enum";
 
 const OnePiecePage: React.FC = () => {
     const navigate = useNavigate();
-    
-    const [message, setMessage] = useState<string>("");
-
-    useEffect(() => {
-        subscribeToTopic("box/lightlevel", setMessage);
-    }, []);
-
-    useEffect(() => {
-        const value = parseInt(message);
-        if (!isNaN(value) && value < 3) {
-            sendToTopic("game/player1", "c bon");
-        }
-    }, [message]);
 
     const handleGoClick = () => {
         navigate('/step', { 
@@ -54,11 +40,6 @@ const OnePiecePage: React.FC = () => {
                 >
                     GO
                 </button>
-            </div>
-
-            <div className="mt-8 text-center">
-                <h2 className="text-3xl">Lumière :</h2>
-                <p className="text-xl">{message || "Erreur "}</p>
             </div>
         </div>
     );
