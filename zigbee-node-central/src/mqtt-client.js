@@ -1,4 +1,7 @@
 import mqtt from 'mqtt';
+import xbee_api from 'xbee-api';
+
+const C = xbee_api.constants;
 
 const client = mqtt.connect("mqtt://test.mosquitto.org");
 
@@ -13,7 +16,11 @@ export function subscribeToTopic(topic) {
     }
     else {
       console.log(`Subscribed to topic ${topic}`);
-      sendToTopic(topic, "Hello from MQTT client");
+    }
+  });
+  client.on("message", (receivedTopic, message) => {
+    if (receivedTopic === topic) {
+      console.log(message.toString())
     }
   });
 }
@@ -27,6 +34,27 @@ export function sendToTopic(topic, message) {
       console.log(`Published message to topic ${topic}`);
     }
   });
+}
+
+export function sendAtCommand(command, parameter = [], xbeeAPI) {
+  const frame = {
+    type: C.FRAME_TYPE.AT_COMMAND,
+    command: command,
+    commandParameter: parameter,
+  };
+  xbeeAPI.builder.write(frame);
+  console.log(`Sent local AT command: ${command}`);
+}
+
+export function sendRemoteAtCommand(destination64, command, parameter = [], xbeeAPI) {
+  const frame = {
+    type: C.FRAME_TYPE.REMOTE_AT_COMMAND_REQUEST,
+    destination64: destination64,
+    command: command,
+    commandParameter: parameter,
+  };
+  xbeeAPI.builder.write(frame);
+  console.log(`Sent remote AT command '${command}' to ${destination64}`);
 }
 
 export default client;

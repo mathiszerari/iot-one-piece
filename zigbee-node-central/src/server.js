@@ -34,6 +34,9 @@ serialport.pipe(xbeeAPI.parser);
 xbeeAPI.builder.pipe(serialport);
 
 const BROADCAST_ADDRESS = "FFFFFFFFFFFFFFFF";
+const XPEE_1 = "";
+const XPEE_2 = "0013A20041FB607D";
+
 serialport.on("open", function () {
 
   //Sample local command to ask local Xbee module the value of NODE IDENTIFIER
