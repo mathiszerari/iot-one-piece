@@ -1,7 +1,7 @@
 import SerialPort from 'serialport';
 import xbee_api from 'xbee-api';
 import mqtt from 'mqtt';
-import {sendToTopic, subscribeToTopic} from './mqtt-client.js';
+import {sendRemoteAtCommand, sendToTopic, subscribeToTopic} from './mqtt-client.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -34,8 +34,8 @@ serialport.pipe(xbeeAPI.parser);
 xbeeAPI.builder.pipe(serialport);
 
 const BROADCAST_ADDRESS = "FFFFFFFFFFFFFFFF";
-const XPEE_1 = "";
-const XPEE_2 = "0013A20041FB607D";
+const XBEE1 = "0013A20041FB76EA"
+
 
 serialport.on("open", function () {
 
@@ -57,6 +57,14 @@ serialport.on("open", function () {
   };
   xbeeAPI.builder.write(frame_obj);
 
+  var setLum = {
+    type: C.FRAME_TYPE.REMOTE_AT_COMMAND_REQUEST,
+    destination64: '0013a20041fb76ea',
+    command: "D1",
+    commandParameter: [0x00],
+  };
+  xbeeAPI.builder.write(setLum);
+
 });
 
 // All frames parsed by the XBee will be emitted here
@@ -77,7 +85,7 @@ xbeeAPI.parser.on("data", function (frame) {
 
   if (C.FRAME_TYPE.NODE_IDENTIFICATION === frame.type) {
     // let dataReceived = String.fromCharCode.apply(null, frame.nodeIdentifier);
-    console.log("NODE_IDENTIFICATION");
+    console.log("NODE_IDENTIFICATION", frame);
 
   } else if (C.FRAME_TYPE.ZIGBEE_IO_DATA_SAMPLE_RX === frame.type) {
     console.log("ZIGBEE_IO_DATA_SAMPLE_RX");

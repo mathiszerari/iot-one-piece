@@ -1,6 +1,6 @@
 import mqtt from 'mqtt';
 
-const client = mqtt.connect("mqtt://test.mosquitto.org:8081");
+const client = mqtt.connect("wss://test.mosquitto.org:8081");
 
 export function subscribeToTopic(topic, setMessage) {
 

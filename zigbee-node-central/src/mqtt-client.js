@@ -9,21 +9,24 @@ client.on("connect", () => {
   console.log("Connected to MQTT broker");
 });
 
-export function subscribeToTopic(topic) {
+export function subscribeToTopic(topic, callback) {
   client.subscribe(topic, (err) => {
     if (err) {
       console.error(`Failed to subscribe to topic ${topic}:`, err);
-    }
-    else {
+    } else {
       console.log(`Subscribed to topic ${topic}`);
     }
   });
+
   client.on("message", (receivedTopic, message) => {
     if (receivedTopic === topic) {
-      console.log(message.toString())
+      const data = message.toString();
+      console.log(`${receivedTopic}: ${data}`);
+      if (callback) callback(data);
     }
   });
 }
+
 
 export function sendToTopic(topic, message) {
   client.publish(topic, message, (err) => {
@@ -54,6 +57,7 @@ export function sendRemoteAtCommand(destination64, command, parameter = [], xbee
     commandParameter: parameter,
   };
   xbeeAPI.builder.write(frame);
+  console.log(parameter)
   console.log(`Sent remote AT command '${command}' to ${destination64}`);
 }
 

@@ -11,8 +11,8 @@ const OnePiecePage: React.FC = () => {
 
     useEffect(() => {
         const value = parseInt(message);
-        if (!isNaN(value) && value < 3) {
-            sendToTopic("game/player1", "c bon");
+        if (!isNaN(value) && value < 100) {
+            sendToTopic("box/step", "step2");
         }
     }, [message]);
 
