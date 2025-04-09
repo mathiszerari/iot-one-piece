@@ -19,6 +19,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) =>
                     ></div>
                 </div>
                 <div className="flex justify-between text-sm mt-2">
+                    <span>Étape {currentStep}</span>
                     <span>sur {totalSteps}</span>
                 </div>
             </div>
