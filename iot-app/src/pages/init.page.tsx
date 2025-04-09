@@ -8,19 +8,6 @@ import { subscribeLightLevel } from "../services/light.service";
 
 const OnePiecePage: React.FC = () => {
     const navigate = useNavigate();
-    
-    const [message, setMessage] = useState<string>("");
-
-    useEffect(() => {
-        subscribeLightLevel(setMessage);
-    }, []);
-
-    useEffect(() => {
-        const value = parseInt(message);
-        if (!isNaN(value) && value < 3) {
-            sendToTopic("game/player1", "c bon");
-        }
-    }, [message]);
 
     const handleGoClick = () => {
         navigate('/step', { 
@@ -55,11 +42,6 @@ const OnePiecePage: React.FC = () => {
                 >
                     GO
                 </button>
-            </div>
-
-            <div className="mt-8 text-center">
-                <h2 className="text-3xl">Lumière :</h2>
-                <p className="text-xl">{message || "Erreur "}</p>
             </div>
         </div>
     );
