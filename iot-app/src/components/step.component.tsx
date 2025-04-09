@@ -14,7 +14,7 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
             if (brutValue) {
                 const value = parseInt(brutValue);
                 if (!isNaN(value)) {
-                    setMessage(calculateDistance(value, sensor).message);
+                    setMessage(calculateDistance(value, sensor, step).message);
                 }
             }
         }

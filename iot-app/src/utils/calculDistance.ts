@@ -1,22 +1,51 @@
 import { SensorType } from "../models/sensors.enum";
+import { sendToTopic } from "./mqttFunctions";
 
-export const calculateDistance = (value: number, sensor: SensorType) => {
-  let max : number = 0;
-  let mid : number = 0;
-  let low: number = 0;
-  
-  if (sensor !== SensorType.LIGHT) {
-    max = 100;
-    mid = 50;
-    low = 0;
+interface CalculationResult {
+  message: string;
+  passed: boolean;
+}
+
+export const calculateDistance = (value: number, sensor: SensorType, step: number): CalculationResult => {
+  if (sensor === SensorType.LIGHT) {
+    return lightCalcul();
   }
-  
-  if (value >= max) {
-    return { message: "Ah non tu n'y es pas", passed: false };
-  } else if (value < max && value >= mid) {
-    return { message: "Ça chauffe, continue comme ça !", passed: false };
-  } else if (value < low) {
-    return { message: "Félicitation, c'est réussi !", passed: true };
+
+  if (sensor === SensorType.PRESSURE) {
+    return pressureCalcul();
   }
-  return { message: "Analyse en cours", passed: false };
+
+  function lightCalcul(): CalculationResult {
+    let max = 100;
+    let mid = 50;
+    let low = 0;
+
+    if (value >= max) {
+      return { message: "Ah non tu n'y es pas", passed: false };
+    } else if (value < max && value >= mid) {
+      return { message: "Ça chauffe, continue comme ça !", passed: false };
+    } else if (value < low) {
+      // maybe add delay
+      sendToTopic("box/step", `step-${step+1}`)
+      return { message: "Félicitation, c'est réussi !", passed: true };
+  
+    }
+    return { message: "Analyse en cours", passed: false };
+  }
+
+  function pressureCalcul(): CalculationResult {
+    let limit = 30
+
+    if (value <= limit) {
+      return { message: "Ah non tu n'y es pas", passed: false };
+    } else if (value > limit) {
+      // maybe add delay
+      sendToTopic("box/step", `step-${step+1}`)
+      return { message: "Félicitation, c'est réussi !", passed: true };
+  
+    }
+    return { message: "Analyse en cours", passed: false };
+  }
+
+  return { message: "Erreur", passed: false };
 }

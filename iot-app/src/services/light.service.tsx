@@ -17,5 +17,5 @@ export const subscribeLightLevel = (
 
     const value = parseInt(setBrutValue.toString()); // added toString() to avoid TypeScript error
     sendToTopic("box/step", `step-${step}`);
-    return calculateDistance(value, sensor).message;
+    return calculateDistance(value, sensor, step).message;
 };
