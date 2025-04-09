@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import "../App.css";
 import { subscribeToTopic, sendToTopic } from "../utils/mqttFunctions";
 import { useNavigate } from "react-router-dom";
+import { SensorType } from "../models/sensors.enum";
+import { EmojiType } from "../models/emojis.enum";
 
 const OnePiecePage: React.FC = () => {
     const navigate = useNavigate();
@@ -22,9 +24,10 @@ const OnePiecePage: React.FC = () => {
     const handleGoClick = () => {
         navigate('/step', { 
             state: { 
-                image: "mathis", 
-                number: 3,
-                indice: "Cherchez bien dans la salle !"
+                image: EmojiType.sunny, 
+                number: 1,
+                indice: "Revenez chercher le trésor la nuit 🌙",
+                sensor: SensorType.LIGHT
             } 
         });
     };
