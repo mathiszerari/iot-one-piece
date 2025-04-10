@@ -13,6 +13,9 @@ export const selectStep = (navigate: NavigateFunction, step: number) => {
     if (step === 3) {
       navigateToStep(navigate, EmojiType.sound, 3, "Il ne faut pas un bruit pour récupérer le trésor 🎵", SensorType.SOUND);
     }
+    if (step === 4) {
+      navigate("/victory");
+    }
   }, 2000); // 2000 millisecondes = 2 secondes
 };
 

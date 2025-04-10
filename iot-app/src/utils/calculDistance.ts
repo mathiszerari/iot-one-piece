@@ -17,9 +17,9 @@ export const calculateDistance = (value: number, sensor: SensorType, step: numbe
   }
 
   function lightCalcul(): CalculationResult {
-    let max = 700;
-    let mid = 600;
-    let low = 400;
+    let max = 100;
+    let mid = 50;
+    let low = 0;
 
     if (value >= max) {
       return { message: "Ah non tu n'y es pas", passed: false };
