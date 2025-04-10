@@ -58,7 +58,7 @@ serialport.on("open", function () {
       case 'step-0' :
         sendRemoteAtCommand(getBoxIdByName('box1'), 'D0', [0x00], xbeeAPI);
         sendRemoteAtCommand(getBoxIdByName('box1'), 'D1', [0x00], xbeeAPI);
-        sendRemoteAtCommand(getBoxIdByName('box1'), 'D2', [0x04], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D2', [0x00], xbeeAPI);
         sendRemoteAtCommand(getBoxIdByName('box1'), 'D3', [0x00], xbeeAPI);
         sendRemoteAtCommand(getBoxIdByName('box1'), 'D4', [0x00], xbeeAPI);
         sendRemoteAtCommand(getBoxIdByName('box1'), 'D7', [0x00], xbeeAPI);
@@ -121,16 +121,16 @@ xbeeAPI.parser.on("data", function (frame) {
     console.log(actualStep)
     switch (actualStep) {
       case 'step-1':
-        sendToTopic('box/lightlevel', String(frame.analogSamples.AD0));
+        sendToTopic('box/captor/lightlevel', String(frame.analogSamples.AD1));
         break;
 
       case 'step-2':
-        sendToTopic('box/pressionlevel', String(frame.analogSamples.AD1));
+        sendToTopic('box/captor/pressionlevel', String(frame.analogSamples.AD3));
         break;
 
 
       case 'step-3':
-        sendToTopic('box/soundlevel', String(frame.analogSamples.AD2));
+        sendToTopic('box/captor/soundlevel', String(frame.analogSamples.AD0));
         break;
 
     }
