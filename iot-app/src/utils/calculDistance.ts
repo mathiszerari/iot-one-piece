@@ -1,4 +1,3 @@
-import { SensorType } from "../models/sensors.enum";
 import { sendToTopic } from "./mqttFunctions";
 
 interface CalculationResult {
@@ -7,12 +6,12 @@ interface CalculationResult {
   nextstep?: number;
 }
 
-export const calculateDistance = (value: number, sensor: SensorType, step: number): CalculationResult => {
-  if (sensor === SensorType.LIGHT) {
+export const calculateDistance = (value: number, step: number): CalculationResult => {
+  if (step === 1) {
     return lightCalcul();
-  } else if (sensor === SensorType.PRESSURE) {
+  } else if (step === 2) {
     return pressureCalcul();
-  } else if (sensor === SensorType.SOUND) {
+  } else if (step === 3) {
     return soundCalcul();
   }
 
