@@ -3,11 +3,10 @@ import "../App.css";
 
 interface ProgressBarProps {
     currentStep: number;
-    totalSteps: number;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) => {
-    const progressPercentage = (currentStep / totalSteps) * 100;
+const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep }) => {
+    const progressPercentage = (currentStep / 3) * 100;
 
     return (
         <div className="flex my-6 mx-auto bg-gray-950 text-white w-4/5">
@@ -20,7 +19,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) =>
                 </div>
                 <div className="flex justify-between text-sm mt-2">
                     <span>Étape {currentStep}</span>
-                    <span>sur {totalSteps}</span>
+                    <span>sur 3</span>
                 </div>
             </div>
         </div>
