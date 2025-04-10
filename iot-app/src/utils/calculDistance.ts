@@ -4,6 +4,7 @@ import { sendToTopic } from "./mqttFunctions";
 interface CalculationResult {
   message: string;
   passed: boolean;
+  nextstep?: number;
 }
 
 export const calculateDistance = (value: number, sensor: SensorType, step: number): CalculationResult => {
@@ -26,11 +27,11 @@ export const calculateDistance = (value: number, sensor: SensorType, step: numbe
       return { message: "Ça chauffe, continue comme ça !", passed: false };
     } else if (value < low) {
       // maybe add delay
-      sendToTopic("box/step", `step-${step+1}`)
-      return { message: "Félicitation, c'est réussi !", passed: true };
+      sendToTopic("box/step", `step-2`);
+      return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 2 };
   
     }
-    return { message: "Analyse en cours", passed: false };
+    return { message: "Analyse en cours", passed: false, nextstep: 2 };
   }
 
   function pressureCalcul(): CalculationResult {
@@ -40,11 +41,11 @@ export const calculateDistance = (value: number, sensor: SensorType, step: numbe
       return { message: "Ah non tu n'y es pas", passed: false };
     } else if (value > limit) {
       // maybe add delay
-      sendToTopic("box/step", `step-${step+1}`)
-      return { message: "Félicitation, c'est réussi !", passed: true };
+      sendToTopic("box/step", `step-3`);
+      return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 3 };
   
     }
-    return { message: "Analyse en cours", passed: false };
+    return { message: "Analyse en cours", passed: false, nextstep: 3 };
   }
 
   return { message: "Erreur", passed: false };

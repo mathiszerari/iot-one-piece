@@ -3,8 +3,10 @@ import { SensorType } from "../models/sensors.enum";
 import { subscribeSensorLevel } from "../services/sensor.service";
 import { StepData } from "../models/step";
 import { calculateDistance } from "../utils/calculDistance";
+import { selectStep } from "../utils/selectStep";
 
 const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
+  
     const [message, setMessage] = useState<string>("");
     const [brutValue, setBrutValue] = useState<string>("");
 
@@ -14,7 +16,11 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
             if (brutValue) {
                 const value = parseInt(brutValue);
                 if (!isNaN(value)) {
-                    setMessage(calculateDistance(value, sensor, step).message);
+                    const result = calculateDistance(value, sensor, step);
+                    setMessage(result.message);
+                    if (result.nextstep) {
+                        selectStep(result.nextstep);
+                    }
                 }
             }
         }
