@@ -8,11 +8,11 @@ interface CalculationResult {
 }
 
 export const calculateDistance = (value: number, sensor: SensorType, step: number): CalculationResult => {
-  if (sensor === SensorType.LIGHT) {
+  if (step === 1) {
     return lightCalcul();
-  } else if (sensor === SensorType.PRESSURE) {
+  } else if (step === 2) {
     return pressureCalcul();
-  } else if (sensor === SensorType.SOUND) {
+  } else if (step === 3) {
     return soundCalcul();
   }
 
