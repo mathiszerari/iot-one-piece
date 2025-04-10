@@ -1,8 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../App.css";
 import { selectStep } from "../utils/selectStep";
 
 const OnePiecePage: React.FC = () => {
+    const navigate = useNavigate();
 
     return (
         <div className="bg-gray-950 text-white min-h-screen">
@@ -21,7 +23,7 @@ const OnePiecePage: React.FC = () => {
             </div>
             <div className="text-center pt-8">
                 <button 
-                    onClick={() => selectStep(1)}
+                    onClick={() => selectStep(navigate, 1)}
                     className="bg-gray-800 text-white text-2xl font-bold p-8 rounded-full border-4 hover:bg-red-600 transition duration-300"
                 >
                     GO
