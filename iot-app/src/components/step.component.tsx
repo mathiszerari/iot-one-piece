@@ -1,23 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { SensorType } from "../models/sensors.enum";
-import { subscribeLightLevel } from "../services/light.service";
+import { subscribeSensorLevel } from "../services/sensor.service";
 import { StepData } from "../models/step";
 import { calculateDistance } from "../utils/calculDistance";
+import { selectStep } from "../utils/selectStep";
 
 const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
+  
     const [message, setMessage] = useState<string>("");
     const [brutValue, setBrutValue] = useState<string>("");
 
     useEffect(() => {
         if (sensor === SensorType.LIGHT) {
-            subscribeLightLevel(setBrutValue, step, sensor);
-            if (brutValue) {
-                const value = parseInt(brutValue);
-                if (!isNaN(value)) {
-                    setMessage(calculateDistance(value, sensor, step).message);
+            subscribeSensorLevel(setBrutValue, step, sensor, "lightlevel");
+        }
+        if (sensor === SensorType.PRESSURE) {
+            subscribeSensorLevel(setBrutValue, step, sensor, "pressionlevel");
+        }
+        if (sensor === SensorType.SOUND) {
+            subscribeSensorLevel(setBrutValue, step, sensor, "soundlevel");
+        }
+
+        if (brutValue) {
+            const value = parseInt(brutValue);
+            if (!isNaN(value)) {
+                const result = calculateDistance(value, sensor, step);
+                setMessage(result.message);
+                if (result.nextstep) {
+                    selectStep(result.nextstep);
                 }
             }
         }
+
     }, [sensor, brutValue]);
 
     return (
