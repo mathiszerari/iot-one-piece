@@ -25,7 +25,7 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
         if (brutValue) {
             const value = parseInt(brutValue);
             if (!isNaN(value)) {
-                const result = calculateDistance(value, sensor, step);
+                const result = calculateDistance(value, step);
                 setMessage(result.message);
                 if (result.nextstep) {
                     selectStep(navigate, result.nextstep);
@@ -44,11 +44,9 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
                 alt="Step"
                 className="my-4 w-1/3 h-1/3 object-cover rounded-lg shadow-lg"
             />
-            {sensor === SensorType.LIGHT && (
-                <div className="mt-8 text-center">
-                    <p className="text-xl">{message || "Erreur "}</p>
-                </div>
-            )}
+            <div className="mt-8 text-center">
+                <p className="text-xl">{message || "En attente de données..."}</p>
+            </div>
         </div>
     );
 };
