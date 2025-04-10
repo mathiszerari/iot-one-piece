@@ -25,7 +25,6 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     } else if (value < max && value >= mid) {
       return { message: "Ça chauffe, continue comme ça !", passed: false };
     } else if (value < low) {
-      // maybe add delay
       sendToTopic("box/step", `step-2`);
       return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 2 };
   
@@ -39,7 +38,6 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     if (value <= limit) {
       return { message: "Ah non tu n'y es pas", passed: false };
     } else if (value > limit) {
-      // maybe add delay
       sendToTopic("box/step", `step-3`);
       return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 3 };
   
@@ -53,7 +51,6 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     if (value <= limit) {
       return { message: "Ah non tu n'y es pas", passed: false };
     } else if (value > limit) {
-      // maybe add delay
       sendToTopic("box/step", `step-4`);
       return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 4 };
   
