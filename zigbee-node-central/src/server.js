@@ -23,7 +23,7 @@ var xbeeAPI = new xbee_api.XBeeAPI({
 
 const connectedBoxes = new Map();
 
-let actualStep = ''
+let actualStep = 'step-1'
 
 function getBoxIdByName(name) {
   for (const [boxId, nodeIdentifier] of connectedBoxes) {
@@ -48,34 +48,42 @@ xbeeAPI.builder.pipe(serialport);
 
 serialport.on("open", function () {
 
+  let previousStep = null;
+
   subscribeToTopic('box/step', (message) => {
+
     actualStep = message;
+
+    if (message === previousStep) {
+      console.log("Aucune modification de l'étape, on ne fait rien.");
+      return;
+    }
+
+    previousStep = message;
+
     switch (message) {
+      case 'step-0' :
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D0', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D1', [0x00], xbeeAPI);
+        break;
       case 'step-1':
-        sendRemoteAtCommand(getBoxIdByName('box1'),'D0', [0x00], xbeeAPI);
-        sendRemoteAtCommand(getBoxIdByName('box1'),'D1', [0x02], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D0', [0x02], xbeeAPI);
         break;
+
       case 'step-2':
-        sendRemoteAtCommand(getBoxIdByName('box1'),'D0', [0x04], xbeeAPI);
-        sendRemoteAtCommand(getBoxIdByName('box1'),'D1', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D0', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D1', [0x02], xbeeAPI);
         break;
 
-      case 'reset':
-        break;
+        case 'step-3':
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D1', [0x00], xbeeAPI);
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D2', [0x02], xbeeAPI);
+          break;
 
-      default:
-        console.warn(`${message}`);
     }
   });
 
 
-/*   var frame_obj = { // AT Request to be sent
-    type: C.FRAME_TYPE.REMOTE_AT_COMMAND_REQUEST,
-    destination64: "0013A20041FB5A5C",
-    command: "D0",
-    commandParameter: [0x00],
-  };
-  xbeeAPI.builder.write(frame_obj);*/
 
 
 
@@ -94,9 +102,7 @@ xbeeAPI.parser.on("data", function (frame) {
     if (!connectedBoxes.has(boxId)) {
       if (nodeIdentifier === 'box1') {
         connectedBoxes.set(boxId, nodeIdentifier);
-        sendRemoteAtCommand(getBoxIdByName('box1'),'D1', [0x02], xbeeAPI);
 
-        sendToTopic("box/step", "step-1");
       } else {
         console.log(`Box ignorée : nodeIdentifier = "${nodeIdentifier}"`);
       }
@@ -106,14 +112,11 @@ xbeeAPI.parser.on("data", function (frame) {
   } else if (C.FRAME_TYPE.ZIGBEE_IO_DATA_SAMPLE_RX === frame.type) {
     console.log("ZIGBEE_IO_DATA_SAMPLE_RX");
     console.log(frame);
-    console.log(frame.analogSamples.AD0);
-
+    console.log(actualStep)
     switch (actualStep) {
       case 'step-1':
-        sendToTopic('box/lightlevel', String(frame.analogSamples.AD1));
+        sendToTopic('box/lightlevel', String(frame.analogSamples.AD0));
         break;
-
-      case 'step-2':
 
     }
 

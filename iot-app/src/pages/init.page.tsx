@@ -3,18 +3,20 @@ import "../App.css";
 import { useNavigate } from "react-router-dom";
 import { SensorType } from "../models/sensors.enum";
 import { EmojiType } from "../models/emojis.enum";
+import {sendToTopic} from "../utils/mqttFunctions"
 
 const OnePiecePage: React.FC = () => {
     const navigate = useNavigate();
 
     const handleGoClick = () => {
-        navigate('/step', { 
-            state: { 
-                image: EmojiType.sunny, 
-                number: 1,
+        sendToTopic('box/step', 'step-1')
+        navigate('/step', {
+            state: {
+                image: EmojiType.sunny,
+                step: 1,
                 indice: "Revenez chercher le trésor la nuit 🌙",
                 sensor: SensorType.LIGHT
-            } 
+            }
         });
     };
 
@@ -34,7 +36,7 @@ const OnePiecePage: React.FC = () => {
                 </p>
             </div>
             <div className="text-center pt-8">
-                <button 
+                <button
                     onClick={handleGoClick}
                     className="bg-gray-800 text-white text-2xl font-bold p-8 rounded-full border-4 hover:bg-red-600 transition duration-300"
                 >
