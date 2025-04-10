@@ -13,14 +13,18 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
     useEffect(() => {
         if (sensor === SensorType.LIGHT) {
             subscribeSensorLevel(setBrutValue, step, sensor, "lightlevel");
-            if (brutValue) {
-                const value = parseInt(brutValue);
-                if (!isNaN(value)) {
-                    const result = calculateDistance(value, sensor, step);
-                    setMessage(result.message);
-                    if (result.nextstep) {
-                        selectStep(result.nextstep);
-                    }
+        }
+        if (sensor === SensorType.PRESSURE) {
+            subscribeSensorLevel(setBrutValue, step, sensor, "pressionlevel");
+        }
+
+        if (brutValue) {
+            const value = parseInt(brutValue);
+            if (!isNaN(value)) {
+                const result = calculateDistance(value, sensor, step);
+                setMessage(result.message);
+                if (result.nextstep) {
+                    selectStep(result.nextstep);
                 }
             }
         }

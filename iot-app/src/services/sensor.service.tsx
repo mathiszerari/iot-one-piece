@@ -8,7 +8,7 @@ export const subscribeSensorLevel = (
     sensor: SensorType,
     entry: string
 ) => {
-    subscribeToTopic("box/" + entry, setBrutValue);
+    subscribeToTopic("box/captor/" + entry, setBrutValue);
 
     const value = parseInt(setBrutValue.toString()); // added toString() to avoid TypeScript error
     sendToTopic("box/step", `step-${step}`);
