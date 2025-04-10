@@ -8,8 +8,12 @@ export const subscribeSensorLevel = (
     sensor: SensorType,
     entry: string
 ) => {
-    subscribeToTopic("box/captor/" + entry, setBrutValue);
+    console.log(`Subscribing to topic: box/captor/${entry}`);
+    subscribeToTopic("box/captor/" + entry, (message) => {
+        console.log(`Received message for ${entry}:`, message);
+        setBrutValue(message);
+    });
 
     const value = parseInt(setBrutValue.toString());
-    return calculateDistance(value, sensor, step).message;
+    return calculateDistance(value, step).message;
 };
