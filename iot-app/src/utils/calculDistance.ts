@@ -16,9 +16,9 @@ export const calculateDistance = (value: number, sensor: SensorType, step: numbe
   }
 
   function lightCalcul(): CalculationResult {
-    let max = 100;
-    let mid = 50;
-    let low = 0;
+    let max = 700;
+    let mid = 600;
+    let low = 400;
 
     if (value >= max) {
       return { message: "Ah non tu n'y es pas", passed: false };
@@ -26,9 +26,9 @@ export const calculateDistance = (value: number, sensor: SensorType, step: numbe
       return { message: "Ça chauffe, continue comme ça !", passed: false };
     } else if (value < low) {
       // maybe add delay
-      sendToTopic("box/step", `step-${step+1}`)
+      sendToTopic("box/step", `step-2`)
       return { message: "Félicitation, c'est réussi !", passed: true };
-  
+
     }
     return { message: "Analyse en cours", passed: false };
   }
@@ -42,7 +42,7 @@ export const calculateDistance = (value: number, sensor: SensorType, step: numbe
       // maybe add delay
       sendToTopic("box/step", `step-${step+1}`)
       return { message: "Félicitation, c'est réussi !", passed: true };
-  
+
     }
     return { message: "Analyse en cours", passed: false };
   }
