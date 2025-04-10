@@ -10,10 +10,10 @@ interface CalculationResult {
 export const calculateDistance = (value: number, sensor: SensorType, step: number): CalculationResult => {
   if (sensor === SensorType.LIGHT) {
     return lightCalcul();
-  }
-
-  if (sensor === SensorType.PRESSURE) {
+  } else if (sensor === SensorType.PRESSURE) {
     return pressureCalcul();
+  } else if (sensor === SensorType.SOUND) {
+    return soundCalcul();
   }
 
   function lightCalcul(): CalculationResult {
@@ -31,7 +31,7 @@ export const calculateDistance = (value: number, sensor: SensorType, step: numbe
       return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 2 };
   
     }
-    return { message: "Analyse en cours", passed: false, nextstep: 2 };
+    return { message: "Analyse en cours", passed: false };
   }
 
   function pressureCalcul(): CalculationResult {
@@ -45,7 +45,21 @@ export const calculateDistance = (value: number, sensor: SensorType, step: numbe
       return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 3 };
   
     }
-    return { message: "Analyse en cours", passed: false, nextstep: 3 };
+    return { message: "Analyse en cours", passed: false };
+  }
+
+  function soundCalcul(): CalculationResult {
+    let limit = 200
+
+    if (value <= limit) {
+      return { message: "Ah non tu n'y es pas", passed: false };
+    } else if (value > limit) {
+      // maybe add delay
+      sendToTopic("box/step", `step-4`);
+      return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 4 };
+  
+    }
+    return { message: "Analyse en cours", passed: false };
   }
 
   return { message: "Erreur", passed: false };

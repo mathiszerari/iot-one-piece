@@ -17,6 +17,9 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
         if (sensor === SensorType.PRESSURE) {
             subscribeSensorLevel(setBrutValue, step, sensor, "pressionlevel");
         }
+        if (sensor === SensorType.SOUND) {
+            subscribeSensorLevel(setBrutValue, step, sensor, "soundlevel");
+        }
 
         if (brutValue) {
             const value = parseInt(brutValue);

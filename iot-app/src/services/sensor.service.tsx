@@ -10,7 +10,7 @@ export const subscribeSensorLevel = (
 ) => {
     subscribeToTopic("box/captor/" + entry, setBrutValue);
 
-    const value = parseInt(setBrutValue.toString()); // added toString() to avoid TypeScript error
+    const value = parseInt(setBrutValue.toString());
     sendToTopic("box/step", `step-${step}`);
     return calculateDistance(value, sensor, step).message;
 };

@@ -12,6 +12,9 @@ export const selectStep = (step: number) => {
     if (step === 2) {
       navigateToStep(EmojiType.fist, 2, "Il faut de la force pour déterrer le trésor 💪🏼", SensorType.PRESSURE);
     }
+    if (step === 3) {
+      navigateToStep(EmojiType.sound, 3, "Il ne faut pas un bruit pour récupérer le trésor 🎵", SensorType.SOUND);
+    }
   }, 2000); // 2000 millisecondes = 2 secondes
 };
 
