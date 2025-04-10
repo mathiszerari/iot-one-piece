@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SensorType } from "../models/sensors.enum";
-import { subscribeLightLevel } from "../services/light.service";
+import { subscribeSensorLevel } from "../services/sensor.service";
 import { StepData } from "../models/step";
 import { calculateDistance } from "../utils/calculDistance";
 
@@ -10,7 +10,7 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
 
     useEffect(() => {
         if (sensor === SensorType.LIGHT) {
-            subscribeLightLevel(setBrutValue, step, sensor);
+            subscribeSensorLevel(setBrutValue, step, sensor, "lightlevel");
             if (brutValue) {
                 const value = parseInt(brutValue);
                 if (!isNaN(value)) {
@@ -18,6 +18,7 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
                 }
             }
         }
+
     }, [sensor, brutValue]);
 
     return (
