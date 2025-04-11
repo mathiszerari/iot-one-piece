@@ -61,6 +61,9 @@ export const calculateDistance = (value: number, step: number): CalculationResul
   }
 
     function soundCalcul(): CalculationResult {
+        if (lastValue === value) {
+            value = 0;
+        }
         console.log(value)
 
         const result: CalculationResult =
