@@ -66,7 +66,6 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     if (lastValue === value) {
         value = 0;
     }
-    let limit = 150
 
     console.log('sound ' + value)
 
