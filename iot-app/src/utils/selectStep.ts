@@ -1,7 +1,7 @@
 import { NavigateFunction } from "react-router-dom";
 import { SensorType } from "../models/sensors.enum";
 import { EmojiType } from "../models/emojis.enum";
-import {sendToTopic, subscribeToTopic} from "../utils/mqttFunctions"
+import {sendToTopic} from "../utils/mqttFunctions"
 
 export const selectStep = (navigate: NavigateFunction, step: number) => {
   setTimeout(() => {
