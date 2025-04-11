@@ -23,7 +23,7 @@ var xbeeAPI = new xbee_api.XBeeAPI({
 
 const connectedBoxes = new Map();
 
-let actualStep = 'step-1'
+let actualStep = ''
 
 function getBoxIdByName(name) {
   for (const [boxId, nodeIdentifier] of connectedBoxes) {
@@ -48,42 +48,48 @@ xbeeAPI.builder.pipe(serialport);
 
 serialport.on("open", function () {
 
-  let previousStep = null;
-
   subscribeToTopic('box/step', (message) => {
 
+    console.log(message)
+
     actualStep = message;
-
-    if (message === previousStep) {
-      console.log("Aucune modification de l'étape, on ne fait rien.");
-      return;
-    }
-
-    previousStep = message;
 
     switch (message) {
       case 'step-0' :
         sendRemoteAtCommand(getBoxIdByName('box1'), 'D0', [0x00], xbeeAPI);
         sendRemoteAtCommand(getBoxIdByName('box1'), 'D1', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D2', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D3', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D4', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D7', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D5', [0x05], xbeeAPI);
+
         break;
       case 'step-1':
-        sendRemoteAtCommand(getBoxIdByName('box1'), 'D0', [0x02], xbeeAPI);
-        break;
-
-      case 'step-2':
-        sendRemoteAtCommand(getBoxIdByName('box1'), 'D0', [0x00], xbeeAPI);
         sendRemoteAtCommand(getBoxIdByName('box1'), 'D1', [0x02], xbeeAPI);
         break;
 
-        case 'step-3':
-          sendRemoteAtCommand(getBoxIdByName('box1'), 'D1', [0x00], xbeeAPI);
-          sendRemoteAtCommand(getBoxIdByName('box1'), 'D2', [0x02], xbeeAPI);
-          break;
+      case 'step-2':
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D1', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D2', [0x04], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D3', [0x02], xbeeAPI);
+        break;
 
+        case 'step-3':
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D3', [0x00], xbeeAPI);
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D7', [0x04], xbeeAPI);
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D0', [0x02], xbeeAPI);
+          break;
+        case 'step-4':
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D0', [0x00], xbeeAPI);
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D4', [0x04], xbeeAPI);
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D5', [0x04], xbeeAPI);
+
+          break;
     }
   });
 
-
+sendToTopic('box/step', 'step-0')
 
 
 
@@ -115,7 +121,16 @@ xbeeAPI.parser.on("data", function (frame) {
     console.log(actualStep)
     switch (actualStep) {
       case 'step-1':
-        sendToTopic('box/lightlevel', String(frame.analogSamples.AD0));
+        sendToTopic('box/captor/lightlevel', String(frame.analogSamples.AD1));
+        break;
+
+      case 'step-2':
+        sendToTopic('box/captor/pressionlevel', String(frame.analogSamples.AD3));
+        break;
+
+
+      case 'step-3':
+        sendToTopic('box/captor/soundlevel', String(frame.analogSamples.AD0));
         break;
 
     }

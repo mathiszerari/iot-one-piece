@@ -31,10 +31,9 @@ export function subscribeToTopic(topic, callback) {
 export function sendToTopic(topic, message) {
   client.publish(topic, message, (err) => {
     if (err) {
-      console.error(`Failed to publish message to topic ${topic}:`, err);
-    }
-    else {
-      console.log(`Published message to topic ${topic}`);
+      console.error(` Failed to publish message to topic ${topic}:`, err);
+    } else {
+      console.log(` Published message to topic ${topic}`);
     }
   });
 }
@@ -46,7 +45,7 @@ export function sendAtCommand(command, parameter = [], xbeeAPI) {
     commandParameter: parameter,
   };
   xbeeAPI.builder.write(frame);
-  console.log(`Sent local AT command: ${command}`);
+  console.log(` Sent local AT command: ${command}`);
 }
 
 export function sendRemoteAtCommand(destination64, command, parameter = [], xbeeAPI) {
@@ -57,8 +56,7 @@ export function sendRemoteAtCommand(destination64, command, parameter = [], xbee
     commandParameter: parameter,
   };
   xbeeAPI.builder.write(frame);
-  console.log(parameter)
-  console.log(`Sent remote AT command '${command}' to ${destination64}`);
+  console.log(` Sent remote AT command '${command}' to ${destination64} with param:`, parameter);
 }
 
 export default client;
