@@ -21,10 +21,8 @@ export function subscribeToTopic(topic, setMessage) {
             setMessage(message.toString());
         }
         console.log('Returning message:', message.toString());
-        return message.toString();
+        message.toString();
     });
-
-    return "default";
 }
 
 export function sendToTopic(topic, message) {
