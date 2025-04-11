@@ -13,7 +13,4 @@ export const subscribeSensorLevel = (
         console.log(`Received message for ${entry}:`, message);
         setBrutValue(message);
     });
-
-    const value = parseInt(setBrutValue.toString());
-    return calculateDistance(value, step).message;
 };

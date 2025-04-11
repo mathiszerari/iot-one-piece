@@ -1,4 +1,3 @@
-import { SensorType } from "../models/sensors.enum";
 import { sendToTopic } from "./mqttFunctions";
 
 interface CalculationResult {
@@ -41,7 +40,7 @@ export const calculateDistance = (value: number, step: number): CalculationResul
   function pressureCalcul(): CalculationResult {
     let limit = 150
 
-      console.log(value)
+    console.log('pressure' + value)
 
     if (value <= limit) {
       return { message: "Ah non tu n'y es pas", passed: false };

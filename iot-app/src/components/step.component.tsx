@@ -24,6 +24,8 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
         
         if (sensorField) {
             subscribeSensorLevel(setBrutValue, step, sensor, sensorField);
+            const value = parseInt(setBrutValue.toString());
+            calculateDistance(value, step);
         }
     }, [sensor, step]);
 
