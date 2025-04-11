@@ -50,7 +50,11 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     console.log('pressure' + value)
 
     if (value <= limit) {
+      console.log('====================================');
+      console.log(value);
+      console.log('====================================');
       return { message: "Ah non tu n'y es pas", passed: false };
+
     } else if (value > limit) {
       // maybe add delay
       sendToTopic("box/step", `step-3`);
