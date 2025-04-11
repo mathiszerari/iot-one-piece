@@ -4,7 +4,6 @@ import { EmojiType } from "../models/emojis.enum";
 import {sendToTopic} from "../utils/mqttFunctions"
 
 export const selectStep = (navigate: NavigateFunction, step: number) => {
-  setTimeout(() => {
     if (step === 1) {
       sendToTopic('box/step', 'step-1');
       navigateToStep(navigate, EmojiType.sunny, 1, "Revenez chercher le trésor la nuit 🌙", SensorType.LIGHT);
@@ -18,7 +17,6 @@ export const selectStep = (navigate: NavigateFunction, step: number) => {
     if (step === 4) {
       navigate("/victory");
     }
-  }, 2000); // 2000 millisecondes = 2 secondes
 };
 
 const navigateToStep = (

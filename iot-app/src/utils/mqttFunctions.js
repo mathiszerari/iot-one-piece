@@ -13,11 +13,15 @@ export function subscribeToTopic(topic, setMessage) {
     });
 
     client.on("message", (receivedTopic, message) => {
+        console.log('Received message:', message.toString());
         if (receivedTopic === topic) {
+            console.log('Setting message:', message.toString());
             setMessage(message.toString());
         }
+        console.log('Returning message:', message.toString());
+        return message.toString();
     });
-
+    return "default";
 }
 
 export function sendToTopic(topic, message) {
