@@ -9,17 +9,14 @@ interface CalculationResult {
 let lastValue = 0;
 
 export const calculateDistance = (value: number, step: number): CalculationResult => {
-  let change = false
-
   console.log('====================================');
   console.log('value', value);
   console.log('====================================');
   if (step === 1) {
     return lightCalcul();
   } else if (step === 2) {
-    if (change == false) {
+    if (lastValue === value) {
       value = 0;
-      change = true
     }
     return pressureCalcul();
   } else if (step === 3) {
@@ -40,7 +37,7 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     } else if (value < low) {
       // maybe add delay
       sendToTopic("box/step", `step-2`);
-      value = 0;
+      lastValue = value;
       return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 2 };
 
     }
