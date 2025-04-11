@@ -15,9 +15,6 @@ export const calculateDistance = (value: number, step: number): CalculationResul
   if (step === 1) {
     return lightCalcul();
   } else if (step === 2) {
-    if (lastValue === value) {
-      value = 0;
-    }
     return pressureCalcul();
   } else if (step === 3) {
     
@@ -45,6 +42,9 @@ export const calculateDistance = (value: number, step: number): CalculationResul
   }
 
   function pressureCalcul(): CalculationResult {
+    if (lastValue === value) {
+        value = 0;
+    }
     let limit = 150
 
     console.log('pressure' + value)
@@ -54,6 +54,7 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     } else if (value > limit) {
       // maybe add delay
       sendToTopic("box/step", `step-3`);
+      lastValue = value;
       return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 3 };
 
     }
