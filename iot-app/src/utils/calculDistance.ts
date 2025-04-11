@@ -18,8 +18,8 @@ export const calculateDistance = (value: number, step: number): CalculationResul
   }
 
   function lightCalcul(): CalculationResult {
-    let max = 100;
-    let low = 70;
+    let max = 400;
+    let low = 250;
 
     console.log(value)
 
