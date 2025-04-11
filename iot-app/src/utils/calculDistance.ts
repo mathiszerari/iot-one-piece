@@ -50,9 +50,6 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     console.log('pressure' + value)
 
     if (value <= limit) {
-      console.log('====================================');
-      console.log(value);
-      console.log('====================================');
       return { message: "Ah non tu n'y es pas", passed: false };
 
     } else if (value > limit) {
@@ -65,27 +62,26 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     return { message: "Analyse en cours", passed: false };
   }
 
-    function soundCalcul(): CalculationResult {
-        if (lastValue === value) {
-            value = 0;
-        }
-        console.log(value)
-
-        const result: CalculationResult =
-            value < lastValue
-                ? { message: "Félicitation, c'est réussi !", passed: true, nextstep: 4 }
-                : { message: "Ah non tu n'y es pas", passed: false };
-
-        if (result.passed) {
-            sendToTopic("box/step", "step-4");
-        }
-
-        if (Number.isInteger(value)) {
-            lastValue = value;
-        }
-
-        return result;
+  function soundCalcul(): CalculationResult {
+    if (lastValue === value) {
+        value = 0;
     }
+    let limit = 150
+
+    console.log('sound ' + value)
+
+    if (value < lastValue) {
+      return { message: "Ah non tu n'y es pas", passed: false };
+
+    } else if (value > lastValue) {
+      // maybe add delay
+      sendToTopic("box/step", `step-4`);
+      lastValue = value;
+      return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 3 };
+
+    }
+    return { message: "Analyse en cours", passed: false };
+  }
 
 
     return { message: "Erreur", passed: false };
