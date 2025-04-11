@@ -31,7 +31,7 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     } else if (value < low) {
       // maybe add delay
       sendToTopic("box/step", `step-2`);
-
+      value = 0;
       return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 2 };
 
     }
