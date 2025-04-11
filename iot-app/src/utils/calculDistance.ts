@@ -63,24 +63,28 @@ export const calculateDistance = (value: number, step: number): CalculationResul
   }
 
   function soundCalcul(): CalculationResult {
-    if (lastValue === value) {
-        value = 0;
-    }
-
-    console.log('sound ' + value)
-
-    if (value < lastValue) {
-      return { message: "Ah non tu n'y es pas", passed: false };
-
-    } else if (value > lastValue) {
-      // maybe add delay
-      sendToTopic("box/step", `step-4`);
-      lastValue = value;
-      return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 3 };
-
-    }
+    console.log('sound ' + value);
+    // Démarrer le compteur de 5 secondes
+    let timer = 0;
+    const interval = setInterval(() => {
+        timer += 1;
+        
+        // Afficher un message pendant le comptage
+        if (timer < 5) {
+            return { message: `Ah non tu n'y es pas`, passed: false };
+        } else {
+            // Les 5 secondes sont écoulées
+            clearInterval(interval); // Arrêter le compteur
+            
+            // Navigation vers l'étape suivante
+            sendToTopic("box/step", `step-4`);
+            lastValue = value;
+            return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 3 };
+        }
+    }, 1000); // Intervalle de 1 seconde
+    
     return { message: "Analyse en cours", passed: false };
-  }
+}
 
 
     return { message: "Erreur", passed: false };
