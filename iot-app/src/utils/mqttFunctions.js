@@ -12,6 +12,8 @@ export function subscribeToTopic(topic, setMessage) {
         });
     });
 
+
+    // ici je ne passe pas
     client.on("message", (receivedTopic, message) => {
         console.log('Received message:', message.toString());
         if (receivedTopic === topic) {
@@ -21,6 +23,7 @@ export function subscribeToTopic(topic, setMessage) {
         console.log('Returning message:', message.toString());
         return message.toString();
     });
+
     return "default";
 }
 

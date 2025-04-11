@@ -9,11 +9,17 @@ interface CalculationResult {
 let lastValue = 0
 
 export const calculateDistance = (value: number, step: number): CalculationResult => {
+
+  console.log('====================================');
+  console.log('value', value);
+  console.log('====================================');
   if (step === 1) {
     return lightCalcul();
   } else if (step === 2) {
+    value = 0;
     return pressureCalcul();
   } else if (step === 3) {
+    
     return soundCalcul();
   }
 
