@@ -22,7 +22,7 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     let max = 100;
     let low = 70;
 
-      console.log(value)
+    console.log(value)
 
     if (value >= max) {
       return { message: "Ah non tu n'y es pas", passed: false };
@@ -31,7 +31,7 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     } else if (value < low) {
       // maybe add delay
       sendToTopic("box/step", `step-2`);
-      
+
       return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 2 };
 
     }

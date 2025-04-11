@@ -22,12 +22,12 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
             subscribeSensorLevel(setBrutValue, step, sensor, "soundlevel");
         }
 
+        console.log('brutvalue1', brutValue)
         if (brutValue) {
             console.log(brutValue);
             const value = parseInt(brutValue);
             console.log(value);
             if (!isNaN(value)) {
-
                 const result = calculateDistance(value, step);
                 console.log(result);
                 setMessage(result.message);
