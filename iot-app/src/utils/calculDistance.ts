@@ -6,9 +6,10 @@ interface CalculationResult {
   nextstep?: number;
 }
 
-let lastValue = 0
+let lastValue = 0;
 
 export const calculateDistance = (value: number, step: number): CalculationResult => {
+  let change = false
 
   console.log('====================================');
   console.log('value', value);
@@ -16,7 +17,10 @@ export const calculateDistance = (value: number, step: number): CalculationResul
   if (step === 1) {
     return lightCalcul();
   } else if (step === 2) {
-    value = 0;
+    if (change == false) {
+      value = 0;
+      change = true
+    }
     return pressureCalcul();
   } else if (step === 3) {
     
