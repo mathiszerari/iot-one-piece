@@ -79,11 +79,11 @@ export const calculateDistance = (value: number, step: number): CalculationResul
             // Navigation vers l'étape suivante
             sendToTopic("box/step", `step-4`);
             lastValue = value;
-            return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 3 };
+            return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 4 };
         }
     }, 1000); // Intervalle de 1 seconde
     
-    return { message: "Analyse en cours", passed: false };
+    return { message: "Ah non tu n'y es pas", passed: false };
 }
 
 
