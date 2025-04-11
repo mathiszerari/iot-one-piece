@@ -13,7 +13,7 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
 
     useEffect(() => {
         let sensorField = "";
-        
+
         if (sensor === SensorType.LIGHT) {
             sensorField = "lightlevel";
         } else if (sensor === SensorType.PRESSURE) {
@@ -21,21 +21,20 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
         } else if (sensor === SensorType.SOUND) {
             sensorField = "soundlevel";
         }
-        
+
         if (sensorField) {
             subscribeSensorLevel(setBrutValue, sensorField);
         }
     }, [sensor, step]);
 
     useEffect(() => {
-        console.log('brutValue a changé:', brutValue);
-        
+
         if (brutValue) {
             const value = parseInt(brutValue);
             if (!isNaN(value)) {
                 const result = calculateDistance(value, step);
-                console.log('Résultat du calcul:', result);
                 setMessage(result.message);
+                console.log(result)
                 if (result.nextstep) {
                     selectStep(navigate, result.nextstep);
                 }

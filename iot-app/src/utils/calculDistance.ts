@@ -7,6 +7,7 @@ interface CalculationResult {
 }
 
 let lastValue = 0;
+let firstSoundValue = null;
 
 export const calculateDistance = (value: number, step: number): CalculationResult => {
   console.log('====================================');
@@ -17,13 +18,13 @@ export const calculateDistance = (value: number, step: number): CalculationResul
   } else if (step === 2) {
     return pressureCalcul();
   } else if (step === 3) {
-    
+
     return soundCalcul();
   }
 
   function lightCalcul(): CalculationResult {
-    let max = 400;
-    let low = 250;
+    let max = 500;
+    let low = 350;
 
     console.log(value)
 
@@ -45,7 +46,7 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     if (lastValue === value) {
         value = 0;
     }
-    let limit = 150
+    let limit = 80
 
     console.log('pressure' + value)
 
@@ -62,29 +63,33 @@ export const calculateDistance = (value: number, step: number): CalculationResul
     return { message: "Analyse en cours", passed: false };
   }
 
-  function soundCalcul(): CalculationResult {
-    console.log('sound ' + value);
-    // Démarrer le compteur de 5 secondes
-    let timer = 0;
-    const interval = setInterval(() => {
-        timer += 1;
-        
-        // Afficher un message pendant le comptage
-        if (timer < 5) {
-            return { message: `Ah non tu n'y es pas`, passed: false };
+    function soundCalcul(): CalculationResult {
+        console.log('sound ' + value);
+
+        if (firstSoundValue === null) {
+            firstSoundValue = value;
+            return {
+                message: "Fais un peu de bruit maintenant...",
+                passed: false
+            };
         } else {
-            // Les 5 secondes sont écoulées
-            clearInterval(interval); // Arrêter le compteur
-            
-            // Navigation vers l'étape suivante
-            sendToTopic("box/step", `step-4`);
-            lastValue = value;
-            return { message: "Félicitation, c'est réussi !", passed: true, nextstep: 4 };
+            console.log('1ere valeur', firstSoundValue);
+            if (value < firstSoundValue) {
+                sendToTopic("box/step", "step-4");
+                firstSoundValue = null;
+                return {
+                    message: "Félicitation, c'est réussi !",
+                    passed: true,
+                    nextstep: 4
+                };
+            } else {
+                return {
+                    message: "Encore trop fort, essaie encore !",
+                    passed: false
+                };
+            }
         }
-    }, 1000); // Intervalle de 1 seconde
-    
-    return { message: "Ah non tu n'y es pas", passed: false };
-}
+    }
 
 
     return { message: "Erreur", passed: false };
