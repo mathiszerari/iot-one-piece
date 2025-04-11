@@ -12,40 +12,36 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
     const [brutValue, setBrutValue] = useState<string>("");
 
     useEffect(() => {
+        let sensorField = "";
+        
         if (sensor === SensorType.LIGHT) {
-            subscribeSensorLevel(setBrutValue, step, sensor, "lightlevel");
-            console.log('====================================');
-            console.log('brutvalue4', brutValue);
-            console.log('====================================');
+            sensorField = "lightlevel";
+        } else if (sensor === SensorType.PRESSURE) {
+            sensorField = "pressionlevel";
+        } else if (sensor === SensorType.SOUND) {
+            sensorField = "soundlevel";
         }
-        if (sensor === SensorType.PRESSURE) {
-            subscribeSensorLevel(setBrutValue, step, sensor, "pressionlevel");
-            console.log('====================================');
-            console.log('brutvalue3', brutValue);
-            console.log('====================================');
+        
+        if (sensorField) {
+            subscribeSensorLevel(setBrutValue, step, sensor, sensorField);
         }
-        if (sensor === SensorType.SOUND) {
-            subscribeSensorLevel(setBrutValue, step, sensor, "soundlevel");
-            console.log('====================================');
-            console.log('brutvalue2', brutValue);
-            console.log('====================================');
-        }
+    }, [sensor, step]);
 
-        console.log('brutvalue1', brutValue)
+    useEffect(() => {
+        console.log('brutValue a changé:', brutValue);
+        
         if (brutValue) {
-            console.log(brutValue);
             const value = parseInt(brutValue);
-            console.log(value);
             if (!isNaN(value)) {
                 const result = calculateDistance(value, step);
-                console.log(result);
+                console.log('Résultat du calcul:', result);
                 setMessage(result.message);
                 if (result.nextstep) {
                     selectStep(navigate, result.nextstep);
                 }
             }
         }
-    }, [sensor, brutValue, navigate]);
+    }, [brutValue, step, navigate]);
 
     return (
         <div className="flex flex-col items-center">
