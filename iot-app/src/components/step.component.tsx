@@ -14,12 +14,21 @@ const Step: React.FC<StepData> = ({ image, step, indice, sensor }) => {
     useEffect(() => {
         if (sensor === SensorType.LIGHT) {
             subscribeSensorLevel(setBrutValue, step, sensor, "lightlevel");
+            console.log('====================================');
+            console.log('brutvalue4', brutValue);
+            console.log('====================================');
         }
         if (sensor === SensorType.PRESSURE) {
             subscribeSensorLevel(setBrutValue, step, sensor, "pressionlevel");
+            console.log('====================================');
+            console.log('brutvalue3', brutValue);
+            console.log('====================================');
         }
         if (sensor === SensorType.SOUND) {
             subscribeSensorLevel(setBrutValue, step, sensor, "soundlevel");
+            console.log('====================================');
+            console.log('brutvalue2', brutValue);
+            console.log('====================================');
         }
 
         console.log('brutvalue1', brutValue)
