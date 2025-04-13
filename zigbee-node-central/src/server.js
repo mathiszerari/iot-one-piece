@@ -1,7 +1,11 @@
-var SerialPort = require('serialport');
-var xbee_api = require('xbee-api');
-var C = xbee_api.constants;
-require('dotenv').config()
+import SerialPort from 'serialport';
+import xbee_api from 'xbee-api';
+import {sendRemoteAtCommand, sendToTopic, subscribeToTopic} from './mqtt-client.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const C = xbee_api.constants;
 
 if (!process.env.SERIAL_PORT)
   throw new Error('Missing SERIAL_PORT environment variable');
@@ -14,8 +18,22 @@ const SERIAL_PORT = process.env.SERIAL_PORT;
 
 // Ensure to configure your XBEE Module in API MODE 2
 var xbeeAPI = new xbee_api.XBeeAPI({
-  api_mode: 2
+  api_mode: 1
 });
+
+const connectedBoxes = new Map();
+
+let actualStep = ''
+
+function getBoxIdByName(name) {
+  for (const [boxId, nodeIdentifier] of connectedBoxes) {
+    if (nodeIdentifier === name) {
+      return boxId;
+    }
+  }
+  return null;
+}
+
 
 let serialport = new SerialPort(SERIAL_PORT, {
   baudRate: parseInt(process.env.SERIAL_BAUDRATE) || 9600,
@@ -28,62 +46,102 @@ let serialport = new SerialPort(SERIAL_PORT, {
 serialport.pipe(xbeeAPI.parser);
 xbeeAPI.builder.pipe(serialport);
 
-const BROADCAST_ADDRESS = "FFFFFFFFFFFFFFFF";
 serialport.on("open", function () {
 
-  //Sample local command to ask local Xbee module the value of NODE IDENTIFIER
-  var frame_obj = { // AT Request to be sent
-    type: C.FRAME_TYPE.AT_COMMAND,
-    command: "NI",
-    commandParameter: [],
-  };
+  subscribeToTopic('box/step', (message) => {
 
-  xbeeAPI.builder.write(frame_obj);
+    console.log(message)
 
-  //Sample remote command to ask all remote Xbee modules the value of their NODE IDENTIFIER
-  frame_obj = { // AT Request to be sent
-    type: C.FRAME_TYPE.REMOTE_AT_COMMAND_REQUEST,
-    destination64: BROADCAST_ADDRESS,
-    command: "NI",
-    commandParameter: [],
-  };
-  xbeeAPI.builder.write(frame_obj);
+    actualStep = message;
+
+    switch (message) {
+      case 'step-0' :
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D0', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D1', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D2', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D3', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D4', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D7', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D5', [0x05], xbeeAPI);
+
+        break;
+      case 'step-1':
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D1', [0x02], xbeeAPI);
+        break;
+
+      case 'step-2':
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D1', [0x00], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D2', [0x04], xbeeAPI);
+        sendRemoteAtCommand(getBoxIdByName('box1'), 'D3', [0x02], xbeeAPI);
+        break;
+
+        case 'step-3':
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D3', [0x00], xbeeAPI);
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D7', [0x04], xbeeAPI);
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D0', [0x02], xbeeAPI);
+          break;
+        case 'step-4':
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D0', [0x00], xbeeAPI);
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D4', [0x04], xbeeAPI);
+          sendRemoteAtCommand(getBoxIdByName('box1'), 'D5', [0x04], xbeeAPI);
+
+          break;
+    }
+  });
+
+sendToTopic('box/step', 'step-0')
+
+
 
 });
 
 // All frames parsed by the XBee will be emitted here
 xbeeAPI.parser.on("data", function (frame) {
 
-  //on new device is joined, register it
-  if (C.FRAME_TYPE.JOIN_NOTIFICATION_STATUS === frame.type) {
-    console.log("New device has joined network, you can register has new device available");
-
-  }
-
-  if (C.FRAME_TYPE.ZIGBEE_RECEIVE_PACKET === frame.type) {
-    console.log("C.FRAME_TYPE.ZIGBEE_RECEIVE_PACKET");
-    let dataReceived = String.fromCharCode.apply(null, frame.data);
-    console.log(">> ZIGBEE_RECEIVE_PACKET >", dataReceived);
-
-  }
 
   if (C.FRAME_TYPE.NODE_IDENTIFICATION === frame.type) {
-    // let dataReceived = String.fromCharCode.apply(null, frame.nodeIdentifier);
-    console.log("NODE_IDENTIFICATION");
+    console.log("NODE_IDENTIFICATION", frame);
+
+    const boxId = frame.sender64.toString('hex');
+    const nodeIdentifier = frame.nodeIdentifier;
+
+    if (!connectedBoxes.has(boxId)) {
+      if (nodeIdentifier === 'box1') {
+        connectedBoxes.set(boxId, nodeIdentifier);
+
+      } else {
+        console.log(`Box ignorée : nodeIdentifier = "${nodeIdentifier}"`);
+      }
+    }
+    console.log("Boxes:", Array.from(connectedBoxes.entries()));
 
   } else if (C.FRAME_TYPE.ZIGBEE_IO_DATA_SAMPLE_RX === frame.type) {
+    console.log("ZIGBEE_IO_DATA_SAMPLE_RX");
+    console.log(frame);
+    console.log(actualStep)
+    switch (actualStep) {
+      case 'step-1':
+        sendToTopic('box/captor/lightlevel', String(frame.analogSamples.AD1));
+        break;
 
-    console.log("ZIGBEE_IO_DATA_SAMPLE_RX")
-    console.log(frame)
-    console.log("Value of ADO can be retrieved with frame.analogSamples.AD0")
-    console.log(frame.analogSamples.AD0)
+      case 'step-2':
+        sendToTopic('box/captor/pressionlevel', String(frame.analogSamples.AD3));
+        break;
+
+
+      case 'step-3':
+        sendToTopic('box/captor/soundlevel', String(frame.analogSamples.AD0));
+        break;
+
+    }
+
+
 
   } else if (C.FRAME_TYPE.REMOTE_COMMAND_RESPONSE === frame.type) {
-    console.log("REMOTE_COMMAND_RESPONSE")
+    console.log("REMOTE_COMMAND_RESPONSE", frame)
   } else {
     console.debug(frame);
     let dataReceived = String.fromCharCode.apply(null, frame.commandData)
     console.log(dataReceived);
   }
-
 });
